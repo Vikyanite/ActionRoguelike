@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ExplosiveBarrel.h"
+#include "ActionRoguelike/Public/ExplosiveBarrel.h"
 
-#include "MagicProjectile.h"
+#include "ActionRoguelike/Public/MagicProjectile.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
