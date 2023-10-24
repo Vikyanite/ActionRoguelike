@@ -2,8 +2,6 @@
 
 
 #include "ActionRoguelike/Public/ExplosiveBarrel.h"
-
-#include "ActionRoguelike/Public/MagicProjectile.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
@@ -14,26 +12,27 @@ AExplosiveBarrel::AExplosiveBarrel()
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
 	SetRootComponent(MeshComp);
+	MeshComp->SetSimulatePhysics(true);
+	MeshComp->OnComponentHit.AddDynamic(this, &AExplosiveBarrel::HitHandler);
 	
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>("RadialForceComp");
-	RadialForceComp->Radius = 600.f;
-	RadialForceComp->ImpulseStrength = 2000.f;
-	RadialForceComp->bImpulseVelChange = true;
 	RadialForceComp->SetupAttachment(MeshComp);
 
-
-	MeshComp->SetSimulatePhysics(true);
-	MeshComp->SetGenerateOverlapEvents(true);
-
-	MeshComp->OnComponentHit.AddDynamic(this, &AExplosiveBarrel::HitHandler);
+	RadialForceComp->SetAutoActivate(false);
+	
+	RadialForceComp->Radius = 750.f;
+	RadialForceComp->ImpulseStrength = 2500.f;
+	
+	RadialForceComp->bImpulseVelChange = true;
+	
+	RadialForceComp->AddCollisionChannelToAffect(ECC_WorldDynamic);
+	
 	
 }
 
 void AExplosiveBarrel::HitHandler(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit!"));
-
 	RadialForceComp->FireImpulse();
 }
 
