@@ -4,6 +4,7 @@
 #include "ActionRoguelike/Public/SCharacter.h"
 #include "ActionRoguelike/Public/SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/Internal/Kismet/BlueprintTypeConversions.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -63,10 +64,35 @@ void ASCharacter::MoveRight(float Value)
 
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	FVector ImpactLoc = CameraComp->GetComponentLocation();
+	FRotator ImpactRot = CameraComp->GetComponentRotation();
+	
+	FVector ImpactEnd = ImpactLoc + (ImpactRot.Vector() * 3000.f);
+	
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	
+	
 
+	float Radius = 30.f;
+	
+	FCollisionShape Shape;
+	Shape.SetSphere(Radius);
+	
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	FTransform SpawnTM;
+	FHitResult Hit;
+	if (GetWorld()->LineTraceSingleByObjectType(Hit, ImpactLoc, ImpactEnd, ObjectQueryParams))
+	{
+		SpawnTM = FTransform(UKismetMathLibrary::FindLookAtRotation(HandLocation, Hit.Location), HandLocation);
+	}
+	else
+	{
+		SpawnTM = FTransform(UKismetMathLibrary::FindLookAtRotation(HandLocation, ImpactEnd), HandLocation);
+	}
+	DrawDebugLine(GetWorld(), ImpactLoc, ImpactEnd, FColor::Red, false, 2.f);
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
