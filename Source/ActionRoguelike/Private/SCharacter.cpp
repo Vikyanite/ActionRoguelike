@@ -2,6 +2,8 @@
 
 
 #include "ActionRoguelike/Public/SCharacter.h"
+
+#include "ActionRoguelike/Public/SAttributeComponent.h"
 #include "ActionRoguelike/Public/SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/Internal/Kismet/BlueprintTypeConversions.h"
@@ -27,6 +29,8 @@ ASCharacter::ASCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	bUseControllerRotationYaw = false;
+
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 }
 
 // Called when the game starts or when spawned
@@ -92,7 +96,7 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 	{
 		SpawnTM = FTransform(UKismetMathLibrary::FindLookAtRotation(HandLocation, ImpactEnd), HandLocation);
 	}
-	DrawDebugLine(GetWorld(), ImpactLoc, ImpactEnd, FColor::Red, false, 2.f);
+	//DrawDebugLine(GetWorld(), ImpactLoc, ImpactEnd, FColor::Red, false, 2.f);
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;

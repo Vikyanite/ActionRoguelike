@@ -3,6 +3,7 @@
 
 #include "ActionRoguelike/Public/MagicProjectile.h"
 
+#include "ActionRoguelike/Public/SAttributeComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -14,7 +15,8 @@ AMagicProjectile::AMagicProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
-	// SphereComp->SetCollisionProfileName("Projectile");
+	SphereComp->SetCollisionProfileName("Projectile");
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OverlapHandler);
 	RootComponent = SphereComp;
 
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
@@ -24,6 +26,8 @@ AMagicProjectile::AMagicProjectile()
 	MovementComp->InitialSpeed = 1000.f;
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bInitialVelocityInLocalSpace = true;
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +35,20 @@ void AMagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AMagicProjectile::OverlapHandler(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor)
+	{
+		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+		if (AttributeComp)
+		{
+			AttributeComp->ApplyHealthChange(-20.f);
+			Destroy();
+		}
+	}
 }
 
 // Called every frame
