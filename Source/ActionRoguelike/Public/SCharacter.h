@@ -25,8 +25,21 @@ protected:
 	UAnimMontage* AttackAnim;
 
 	FTimerHandle TimerHandler_PrimaryAttack;
-
 	void PrimaryAttack_TimeElapsed();
+
+	
+	UPROPERTY(EditAnywhere, Category="Attack")
+	TSubclassOf<AActor> DashProjectileClass;
+	
+	FTimerHandle TimerHandler_Dash;
+	void Dash_TimeElapsed();
+
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	TSubclassOf<AActor> BlackHoleProjectileClass;
+	
+	FTimerHandle TimerHandler_BlackHoleAttack;
+	void BlackHoleAttack_TimeElapsed();
 	
 public:
 	// Sets default values for this character's properties
@@ -44,6 +57,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	USAttributeComponent* AttributeComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	float AttackAnimDelay;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -57,11 +73,17 @@ protected:
 	void Jump();
 
 	void PrimaryInteract();
+
+	void BlackHoleAttack();
+
+	void Dash();
+
+	void SpawnProjectile(TSubclassOf<AActor> ClassSpawn);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 };

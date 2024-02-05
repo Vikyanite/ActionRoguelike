@@ -13,21 +13,7 @@ AMagicProjectile::AMagicProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
-	SphereComp->SetCollisionProfileName("Projectile");
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OverlapHandler);
-	RootComponent = SphereComp;
-
-	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
-	EffectComp->SetupAttachment(RootComponent);
-
-	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
-	MovementComp->InitialSpeed = 1000.f;
-	MovementComp->bRotationFollowsVelocity = true;
-	MovementComp->bInitialVelocityInLocalSpace = true;
-
-	
 }
 
 // Called when the game starts or when spawned
@@ -46,7 +32,7 @@ void AMagicProjectile::OverlapHandler(UPrimitiveComponent* OverlappedComponent, 
 		if (AttributeComp)
 		{
 			AttributeComp->ApplyHealthChange(-20.f);
-			Destroy();
+			Explode();
 		}
 	}
 }
