@@ -14,6 +14,7 @@ AMagicProjectile::AMagicProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AMagicProjectile::OverlapHandler);
+	DamageAmount = 20.f;
 }
 
 // Called when the game starts or when spawned
@@ -31,7 +32,7 @@ void AMagicProjectile::OverlapHandler(UPrimitiveComponent* OverlappedComponent, 
 		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 		if (AttributeComp)
 		{
-			AttributeComp->ApplyHealthChange(-20.f);
+			AttributeComp->ApplyHealthChange(-DamageAmount);
 			Explode();
 		}
 	}
