@@ -24,6 +24,11 @@ void USAttributeComponent::BeginPlay()
 	
 }
 
+bool USAttributeComponent::IsAlive()
+{
+	return Health > 0.f;
+}
+
 
 // Called every frame
 void USAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -35,8 +40,22 @@ void USAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
+	if (Health == 0.0f)
+	{
+		return false;
+	}
 	Health += Delta;
+	
+	if (Health > 100.0f)
+	{
+		Health = 100.0f;
+	}
+	else if (Health < 0.0f)
+	{
+		Health = 0.0f;
+	}
 	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
+	
 	return true;
 }
 

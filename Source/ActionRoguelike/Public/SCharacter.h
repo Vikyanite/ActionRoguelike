@@ -46,6 +46,8 @@ public:
 	ASCharacter();
 
 protected:
+	void virtual PostInitializeComponents() override;
+	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
 
@@ -79,6 +81,9 @@ protected:
 	void Dash();
 
 	void SpawnProjectile(TSubclassOf<AActor> ClassSpawn);
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
