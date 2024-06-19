@@ -40,22 +40,10 @@ void USAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
-	if (Health == 0.0f)
-	{
-		return false;
-	}
 	Health += Delta;
-	
-	if (Health > 100.0f)
-	{
-		Health = 100.0f;
-	}
-	else if (Health < 0.0f)
-	{
-		Health = 0.0f;
-	}
+
 	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
-	
+
 	return true;
 }
 
