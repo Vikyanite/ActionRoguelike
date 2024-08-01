@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "SAIController.generated.h"
 
+class UPawnSensingComponent;
+
 UCLASS()
 class ACTIONROGUELIKE_API ASAIController : public AAIController
 {
