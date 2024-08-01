@@ -19,7 +19,10 @@ ASAIController::ASAIController()
 void ASAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	RunBehaviorTree(BehaviorTree);
+	if (ensureMsgf(BehaviorTree != nullptr, TEXT("BehaviorTree must be assigned")))
+	{
+		RunBehaviorTree(BehaviorTree);
+	}
 }
 
 // Called every frame
