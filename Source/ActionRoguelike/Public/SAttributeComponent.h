@@ -36,5 +36,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	bool ApplyHealthChange(float Delta);
-		
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attributes")
+	float HealthMax = 100.f;
 };

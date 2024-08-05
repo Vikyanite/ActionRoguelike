@@ -40,10 +40,12 @@ void USAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
-	Health += Delta;
+	float PreHealth = Health;
+	Health = FMath::Clamp(Health+Delta, 0.f, HealthMax);
 
-	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
-
+	float ActualDelta = Health-PreHealth;
+	OnHealthChanged.Broadcast(nullptr, this, Health, ActualDelta);
+	
 	return true;
 }
 
