@@ -46,6 +46,9 @@ public:
 	ASCharacter();
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FName TimeToHitParamName = "TimeToHit";
+	
 	void virtual PostInitializeComponents() override;
 	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)

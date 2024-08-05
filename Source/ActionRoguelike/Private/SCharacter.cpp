@@ -165,6 +165,10 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 		APlayerController* PC = CastChecked<APlayerController>(GetController());
 		DisableInput(PC);
 	}
+	if (Delta < .0f)
+	{
+		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
+	}
 }
 
 // Called to bind functionality to input

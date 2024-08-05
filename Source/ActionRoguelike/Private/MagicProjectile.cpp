@@ -4,6 +4,7 @@
 #include "ActionRoguelike/Public/MagicProjectile.h"
 
 #include "ActionRoguelike/Public/SAttributeComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"

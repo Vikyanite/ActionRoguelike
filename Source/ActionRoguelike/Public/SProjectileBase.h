@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "SProjectileBase.generated.h"
 
+class USoundCue;
 class UParticleSystem;
 class USphereComponent;
 class UParticleSystemComponent;
@@ -39,6 +40,14 @@ protected:
 	void Explode();
 
 	virtual void PostInitializeComponents() override;
+
+	// audio
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	UAudioComponent* AudioComp;
+
+	UPROPERTY(EditDefaultsOnly, Category="Audio")
+	USoundCue* ImpactSound;
 	
 public:	
 	// Sets default values for this actor's properties
