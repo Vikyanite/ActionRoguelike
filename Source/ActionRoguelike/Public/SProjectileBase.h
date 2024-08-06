@@ -10,6 +10,7 @@ class USoundCue;
 class UParticleSystem;
 class USphereComponent;
 class UParticleSystemComponent;
+class ULegacyCameraShake;
 class UProjectileMovementComponent;
 
 UCLASS(ABSTRACT)
@@ -41,13 +42,21 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-	// audio
+// effects
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	UAudioComponent* AudioComp;
 
-	UPROPERTY(EditDefaultsOnly, Category="Audio")
+	UPROPERTY(EditDefaultsOnly, Category="Effects|Audio")
 	USoundCue* ImpactSound;
+	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects|Shake")
+	TSubclassOf<ULegacyCameraShake> ImpactShake;
+	UPROPERTY(EditDefaultsOnly, Category = "Effects|Shake")
+	float ImpactShakeInnerRadius;
+	UPROPERTY(EditDefaultsOnly, Category = "Effects|Shake")
+	float ImpactShakeOuterRadius;
 	
 public:	
 	// Sets default values for this actor's properties

@@ -6,7 +6,7 @@
 #include "ActionRoguelike/Public/SAttributeComponent.h"
 #include "ActionRoguelike/Public/SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Engine/Internal/Kismet/BlueprintTypeConversions.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -155,6 +155,9 @@ void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
 
 		FTransform SpawnTM(ProjRotation, HandLocation);
 		GetWorld()->SpawnActor<AActor>(ClassToSpawn, SpawnTM, SpawnParams);
+		
+		// casting spell
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CastSpellVFX, HandLocation, ProjRotation);
 	}
 }
 

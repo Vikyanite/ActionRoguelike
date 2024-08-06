@@ -46,6 +46,6 @@ bool USAttributeComponent::ApplyHealthChange(float Delta)
 	float ActualDelta = Health-PreHealth;
 	OnHealthChanged.Broadcast(nullptr, this, Health, ActualDelta);
 	
-	return true;
+	return ActualDelta != 0.f;
 }
 
