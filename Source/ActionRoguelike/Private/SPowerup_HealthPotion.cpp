@@ -32,7 +32,7 @@ void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 	if (ASCharacter* Player = Cast<ASCharacter>(InstigatorPawn))
 	{
 		USAttributeComponent* AttrComp = Player->GetAttributeComponent();
-		if (AttrComp->ApplyHealthChange(AttrComp->HealthMax))
+		if (AttrComp->ApplyHealthChange(this, AttrComp->HealthMax))
 		{
 			HideAndCooldown();
 		}

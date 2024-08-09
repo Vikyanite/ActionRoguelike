@@ -35,7 +35,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category="Attributes")
-	bool ApplyHealthChange(float Delta);
+	bool ApplyHealthChange(AActor* InstigatorActor, float Delta);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attributes")
 	float HealthMax = 100.f;

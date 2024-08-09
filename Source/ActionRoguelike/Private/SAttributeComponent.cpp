@@ -38,13 +38,13 @@ void USAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-bool USAttributeComponent::ApplyHealthChange(float Delta)
+bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
 	float PreHealth = Health;
 	Health = FMath::Clamp(Health+Delta, 0.f, HealthMax);
 
 	float ActualDelta = Health-PreHealth;
-	OnHealthChanged.Broadcast(nullptr, this, Health, ActualDelta);
+	OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
 	
 	return ActualDelta != 0.f;
 }

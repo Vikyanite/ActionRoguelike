@@ -44,6 +44,10 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 {
 	if (Delta < 0.f)
 	{
+		if (InstigatorActor != this)
+		{
+			SetTargetActor(InstigatorActor);
+		}
 		if (NewHealth <= 0.f)
 		{
 			// stop bt
@@ -63,14 +67,16 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 	}
 }
 
-void ASAICharacter::OnPawnSeen(APawn* SeenPawn)
+void ASAICharacter::SetTargetActor(AActor* NewTarget)
 {
 	if (AAIController* AIC = Cast<AAIController>(GetController()))
 	{
-		if (UBlackboardComponent* BBComp = AIC->GetBlackboardComponent())
-		{
-			BBComp->SetValueAsObject("TargetActor", SeenPawn);
-			DrawDebugString(GetWorld(), GetActorLocation(), "Seen Pawn", nullptr, FColor::Red, 4.f, true);
-		}
+		AIC->GetBlackboardComponent()->SetValueAsObject("TargetActor", NewTarget);
 	}
+}
+
+void ASAICharacter::OnPawnSeen(APawn* SeenPawn)
+{
+	SetTargetActor(SeenPawn);
+	DrawDebugString(GetWorld(), GetActorLocation(), "Seen Pawn", nullptr, FColor::Red, 4.f, true);
 }
