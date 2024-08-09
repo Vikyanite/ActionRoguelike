@@ -50,6 +50,8 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 		}
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Nr of Alive Bots: %d"), NrOfAliveBots);
+
 	float MaxBotCount = 10.f;
 	if (DifficultyCurve)
 	{
@@ -58,6 +60,7 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 
 	if (NrOfAliveBots >= MaxBotCount)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Max Bot Count Reached, Skip Spawning"));
 		return ;
 	}
 

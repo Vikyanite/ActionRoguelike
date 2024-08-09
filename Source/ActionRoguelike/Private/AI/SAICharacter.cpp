@@ -4,6 +4,9 @@
 #include "AI/SAICharacter.h"
 
 #include "AIController.h"
+#include "BrainComponent.h"
+#include "SAttributeComponent.h"
+#include "AI/SAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
@@ -13,7 +16,9 @@ ASAICharacter::ASAICharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	PawnSensingCompo = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingCompo"));
+	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingCompo"));
+
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>(TEXT("AttributeComp"));
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -25,24 +30,37 @@ void ASAICharacter::BeginPlay()
 	
 }
 
-// Called every frame
-void ASAICharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-// Called to bind functionality to input
-void ASAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
 
 void ASAICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	
-	PawnSensingCompo->OnSeePawn.AddDynamic(this, &ASAICharacter::OnPawnSeen);
+	PawnSensingComp->OnSeePawn.AddDynamic(this, &ASAICharacter::OnPawnSeen);
+	AttributeComp->OnHealthChanged.AddDynamic(this, &ASAICharacter::OnHealthChanged);
+}
+
+void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth,
+	float Delta)
+{
+	if (Delta < 0.f)
+	{
+		if (NewHealth <= 0.f)
+		{
+			// stop bt
+			ASAIController* AIC = Cast<ASAIController>(GetController());
+			if (AIC)
+			{
+				AIC->GetBrainComponent()->StopLogic("Killed");
+			}
+
+			// ragdoll
+			GetMesh()->SetAllBodiesSimulatePhysics(true);
+			GetMesh()->SetCollisionProfileName("Ragdoll");
+
+			// lifespan (destroy)
+			SetLifeSpan(10.f);
+		}
+	}
 }
 
 void ASAICharacter::OnPawnSeen(APawn* SeenPawn)
