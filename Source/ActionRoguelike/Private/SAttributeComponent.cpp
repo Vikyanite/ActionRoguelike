@@ -14,28 +14,27 @@ USAttributeComponent::USAttributeComponent()
 	Health = 100.f;
 }
 
-
-// Called when the game starts
-void USAttributeComponent::BeginPlay()
+USAttributeComponent* USAttributeComponent::GetAttributeComp(const AActor* FromActor)
 {
-	Super::BeginPlay();
+	if (FromActor)
+	{
+		return FromActor->FindComponentByClass<USAttributeComponent>();
+	}
+	return nullptr;
+}
 
-	// ...
-	
+bool USAttributeComponent::IsActorAlive(const AActor* FromActor)
+{
+	if (USAttributeComponent* AttrComp = GetAttributeComp(FromActor))
+	{
+		return AttrComp->IsAlive();
+	}
+	return false;
 }
 
 bool USAttributeComponent::IsAlive()
 {
 	return Health > 0.f;
-}
-
-
-// Called every frame
-void USAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
