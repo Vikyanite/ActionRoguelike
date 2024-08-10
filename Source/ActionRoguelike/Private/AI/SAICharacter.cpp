@@ -21,6 +21,8 @@ ASAICharacter::ASAICharacter()
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>(TEXT("AttributeComp"));
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	TimeToHitParamName = "TimeToHit";
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +50,9 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 		{
 			SetTargetActor(InstigatorActor);
 		}
+
+		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
+		
 		if (NewHealth <= 0.f)
 		{
 			// stop bt
