@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "SAICharacter.generated.h"
 
+class USWorldUserWidget;
+class UUserWidget;
 class USAttributeComponent;
 class UPawnSensingComponent;
 
@@ -40,5 +42,9 @@ protected:
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 	
 	void SetTargetActor(AActor* NewTarget);
+
+	UPROPERTY(EditDefaultsOnly, Category="UI")
+	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 	
+	USWorldUserWidget* ActiveHealthBar;
 };
