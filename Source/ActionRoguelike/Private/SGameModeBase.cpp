@@ -13,6 +13,20 @@ ASGameModeBase::ASGameModeBase()
 	SpawnTimerInterval = 2.f;
 }
 
+void ASGameModeBase::KillAll()
+{
+	for (TActorIterator<ASAICharacter> It(GetWorld()); It; ++It)
+	{
+		ASAICharacter* Bot = *It;
+
+		USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributeComp(Bot);
+		if (ensure(AttributeComp) && AttributeComp->IsAlive())
+		{
+			AttributeComp->Kill(Bot);
+		}
+	}
+}
+
 void ASGameModeBase::StartPlay()
 {
 	Super::StartPlay();

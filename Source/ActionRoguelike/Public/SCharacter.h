@@ -98,5 +98,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	USAttributeComponent* GetAttributeComponent() const { return AttributeComp; }
+
+	UFUNCTION(Exec)
+	void HealSelf(float Amount=100);
 	
 };

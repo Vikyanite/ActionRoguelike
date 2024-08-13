@@ -22,6 +22,9 @@ public:
 
 	ASGameModeBase();
 
+	UFUNCTION(Exec)
+	void KillAll();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="AI")
 	UEnvQuery* SpawnBotQuery;

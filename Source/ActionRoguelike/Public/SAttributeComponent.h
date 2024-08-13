@@ -31,6 +31,9 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive();
+
+	UFUNCTION(BlueprintCallable)
+	bool Kill(AActor* InstigatorActor);
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
