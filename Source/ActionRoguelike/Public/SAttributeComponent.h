@@ -23,11 +23,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Attributes", meta=(DisplayName="IsAlive"))
 	static bool IsActorAlive(const AActor* FromActor);
 
-protected:
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
-	float Health;
-
 public:
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive();
@@ -43,4 +38,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attributes")
 	float HealthMax = 100.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float Health;
 };
