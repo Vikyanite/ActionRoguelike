@@ -25,7 +25,13 @@ public:
 	UFUNCTION(Exec)
 	void KillAll();
 
+	UFUNCTION()
+	virtual void OnActorKilled(AActor* VictimActor, AActor* KillerActor);
+
 protected:
+	UFUNCTION()
+	void RespawnPlayerElapsed(AController* Controller);
+	
 	UPROPERTY(EditDefaultsOnly, Category="AI")
 	UEnvQuery* SpawnBotQuery;
 
@@ -45,4 +51,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TSubclassOf<AActor> BotClass;
+
+
 };
