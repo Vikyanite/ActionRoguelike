@@ -104,6 +104,15 @@ void ASCharacter::Dash()
 	GetWorldTimerManager().SetTimer(TimerHandler_Dash, this, &ASCharacter::Dash_TimeElapsed, AttackAnimDelay);
 }
 
+FVector ASCharacter::GetPawnViewLocation() const
+{
+	if (CameraComp)
+	{
+		return CameraComp->GetComponentLocation();
+	}
+	return Super::GetPawnViewLocation();
+}
+	
 void ASCharacter::Dash_TimeElapsed()
 {
 	SpawnProjectile(DashProjectileClass);

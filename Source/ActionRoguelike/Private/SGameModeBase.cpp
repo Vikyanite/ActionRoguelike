@@ -9,6 +9,8 @@
 #include "AI/SAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 
+static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT("Enable Bot Spawning"), ECVF_Cheat);
+
 ASGameModeBase::ASGameModeBase()
 {
 	SpawnTimerInterval = 2.f;
@@ -37,22 +39,12 @@ void ASGameModeBase::StartPlay()
 
 void ASGameModeBase::SpawnBotTimerElapsed()
 {
-	UEnvQueryInstanceBlueprintWrapper* QueryInstance  = UEnvQueryManager::RunEQSQuery(this, SpawnBotQuery, this, EEnvQueryRunMode::RandomBest5Pct,  nullptr);
-	if (QueryInstance)
+	if (!CVarSpawnBots.GetValueOnGameThread())
 	{
-		QueryInstance->GetOnQueryFinishedEvent().AddDynamic(this, &ASGameModeBase::OnQueryCompleted);
-	}
-}
-
-void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
-	EEnvQueryStatus::Type QueryStatus)
-{
-	if (QueryStatus != EEnvQueryStatus::Success)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Spawn Bot EQS Query Failed"));
+		UE_LOG(LogTemp, Warning, TEXT("Bot Spawning is disabled"));
 		return;
 	}
-
+	
 	int32 NrOfAliveBots = 0;
 	for (TActorIterator<ASAICharacter> It(GetWorld()); It; ++It)
 	{
@@ -77,6 +69,21 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Max Bot Count Reached, Skip Spawning"));
 		return ;
+	}
+	UEnvQueryInstanceBlueprintWrapper* QueryInstance  = UEnvQueryManager::RunEQSQuery(this, SpawnBotQuery, this, EEnvQueryRunMode::RandomBest5Pct,  nullptr);
+	if (QueryInstance)
+	{
+		QueryInstance->GetOnQueryFinishedEvent().AddDynamic(this, &ASGameModeBase::OnQueryCompleted);
+	}
+}
+
+void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
+	EEnvQueryStatus::Type QueryStatus)
+{
+	if (QueryStatus != EEnvQueryStatus::Success)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Spawn Bot EQS Query Failed"));
+		return;
 	}
 
 	TArray<FVector> SpawnLocations = QueryInstance->GetResultsAsLocations();
@@ -105,6 +112,12 @@ void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
 {
 	if (ensure(Controller))
 	{
+		APawn* PrePawn = Controller->GetPawn();
+		if (PrePawn)
+		{
+			PrePawn->Destroy();
+		}
+		
 		Controller->UnPossess();
 
 		RestartPlayer(Controller);

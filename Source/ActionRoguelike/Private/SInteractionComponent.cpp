@@ -7,6 +7,13 @@
 #include "ActionRoguelike/Public/SGameplayInterface.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 
+static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(
+	TEXT("su.DebugDraw"),
+	false,
+	TEXT("Enable interaction debug drawing"),
+	ECVF_Cheat
+);
+
 // Sets default values for this component's properties
 USInteractionComponent::USInteractionComponent()
 {
@@ -58,10 +65,14 @@ void USInteractionComponent::PrimaryInteract()
 
 	bool bBlockHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape);
 	
-	FColor LineColor = bBlockHit ? FColor::Red : FColor::Green;
+	FColor LineColor = bBlockHit ? FColor::Green : FColor::Red;
 	for (FHitResult Hit : Hits)
 	{
-		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.f);
+		if (CVarDebugDrawInteraction.GetValueOnGameThread())
+		{
+			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.f);
+		}
+		
 		if (AActor* HitActor = Hit.GetActor())
 		{
 			if (HitActor->Implements<USGameplayInterface>())
@@ -72,5 +83,8 @@ void USInteractionComponent::PrimaryInteract()
 			}
 		}
 	}
-	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.f);
+	if (CVarDebugDrawInteraction.GetValueOnGameThread())
+	{
+		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.f);
+	}
 }

@@ -85,6 +85,8 @@ protected:
 	void BlackHoleAttack();
 
 	void Dash();
+	
+	virtual FVector GetPawnViewLocation() const override;
 
 	void SpawnProjectile(TSubclassOf<AActor> ClassSpawn);
 
