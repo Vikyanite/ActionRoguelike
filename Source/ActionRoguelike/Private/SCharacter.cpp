@@ -3,6 +3,7 @@
 
 #include "ActionRoguelike/Public/SCharacter.h"
 
+#include "SActionComponent.h"
 #include "ActionRoguelike/Public/SAttributeComponent.h"
 #include "ActionRoguelike/Public/SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
@@ -27,6 +28,8 @@ ASCharacter::ASCharacter()
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+
+	ActionComp = CreateDefaultSubobject<USActionComponent>("ActionComp");
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
@@ -128,6 +131,16 @@ void ASCharacter::PrimaryInteract()
 	InteractionComp->PrimaryInteract();
 }
 
+void ASCharacter::StartSprint()
+{
+	ActionComp->StartActionByName(this, "Sprint");
+}
+
+void ASCharacter::StopSprint()
+{
+	ActionComp->StopActionByName(this, "Sprint");
+}
+
 void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
 {
 	if (ensureAlways(ClassToSpawn))
@@ -200,6 +213,9 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 	
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ASCharacter::StartSprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ASCharacter::StopSprint);
 	
 }
 

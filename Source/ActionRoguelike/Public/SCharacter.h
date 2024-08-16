@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+class USActionComponent;
 class USAttributeComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -54,17 +55,20 @@ protected:
 	
 	void virtual PostInitializeComponents() override;
 	
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	USpringArmComponent* SpringArmComp;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	UCameraComponent* CameraComp;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	USInteractionComponent* InteractionComp;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	USAttributeComponent* AttributeComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
+	USActionComponent* ActionComp;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	float AttackAnimDelay;
@@ -82,6 +86,10 @@ protected:
 
 	void PrimaryInteract();
 
+	void StartSprint();
+
+	void StopSprint();
+
 	void BlackHoleAttack();
 
 	void Dash();
@@ -92,6 +100,7 @@ protected:
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
