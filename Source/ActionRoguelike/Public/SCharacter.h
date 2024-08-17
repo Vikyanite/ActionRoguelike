@@ -17,39 +17,12 @@ UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 {
 	GENERATED_BODY()
-	
-protected:
-	UPROPERTY(EditAnywhere, Category="Attack")
-	TSubclassOf<AActor> ProjectileClass;
 
-	UPROPERTY(EditAnywhere, Category="Attack")
-	UAnimMontage* AttackAnim;
-
-	FTimerHandle TimerHandler_PrimaryAttack;
-	void PrimaryAttack_TimeElapsed();
-
-	
-	UPROPERTY(EditAnywhere, Category="Attack")
-	TSubclassOf<AActor> DashProjectileClass;
-	
-	FTimerHandle TimerHandler_Dash;
-	void Dash_TimeElapsed();
-
-
-	UPROPERTY(EditAnywhere, Category="Attack")
-	TSubclassOf<AActor> BlackHoleProjectileClass;
-	
-	FTimerHandle TimerHandler_BlackHoleAttack;
-	void BlackHoleAttack_TimeElapsed();
-	
 public:
 	// Sets default values for this character's properties
 	ASCharacter();
 
 protected:
-	UPROPERTY(EditAnywhere, Category="VFX")
-	UParticleSystem* CastSpellVFX;
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FName TimeToHitParamName = "TimeToHit";
 	
@@ -70,19 +43,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	USActionComponent* ActionComp;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	float AttackAnimDelay;
-	
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);
 	
 	void PrimaryAttack();
-
-	void Jump();
 
 	void PrimaryInteract();
 
@@ -96,15 +61,10 @@ protected:
 	
 	virtual FVector GetPawnViewLocation() const override;
 
-	void SpawnProjectile(TSubclassOf<AActor> ClassSpawn);
-
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 	
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

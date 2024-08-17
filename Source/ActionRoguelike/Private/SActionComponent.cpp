@@ -22,7 +22,7 @@ void USActionComponent::AddAction(TSubclassOf<USAction> ActionClass)
 	{
 		return ;
 	}
-	USAction* NewAction = NewObject<USAction>(GetOwner(), ActionClass);
+	USAction* NewAction = NewObject<USAction>(this, ActionClass);
 	if (!ensure(NewAction))
 	{
 		return ;
@@ -36,7 +36,10 @@ void USActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	for (TSubclassOf<USAction> ActionClass : DefaultActions)
+	{
+		AddAction(ActionClass);
+	}
 	
 }
 

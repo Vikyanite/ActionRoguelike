@@ -34,6 +34,9 @@ protected:
 	UPROPERTY()
 	TArray<USAction*> Actions;
 
+	UPROPERTY(EditAnywhere, Category = "Actions")
+	TArray<TSubclassOf<USAction>> DefaultActions;
+
 
 	
 public:
