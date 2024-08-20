@@ -26,6 +26,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Tags")
 	FGameplayTagContainer GrantsTags;
+
+	bool bIsRunning = false;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Action")
@@ -37,5 +39,11 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	void StopAction(AActor* Instigator);
 
+	UFUNCTION(BlueprintNativeEvent, Category = "Action")
+	bool CanStart(AActor* Instigator);
+
 	UWorld* GetWorld() const override;
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	bool IsRunning() const { return bIsRunning; }
 };

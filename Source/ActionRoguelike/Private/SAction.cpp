@@ -11,6 +11,8 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 	
 	USActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.AppendTags(GrantsTags);
+
+	bIsRunning = true;
 }
 
 void USAction::StopAction_Implementation(AActor* Instigator)
@@ -19,11 +21,30 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 	
 	USActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.RemoveTags(GrantsTags);
+
+	bIsRunning = false;
 }
 
 USActionComponent* USAction::GetOwningComponent()
 {
 	return Cast<USActionComponent>(GetOuter());
+}
+
+bool USAction::CanStart_Implementation(AActor* Instigator)
+{
+	if (IsRunning())
+	{
+		return false;
+	}
+	
+	if (USActionComponent* ActionComp = GetOwningComponent())
+	{
+		if (ActionComp->ActiveGameplayTags.HasAny(BlockedTags))
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 UWorld* USAction::GetWorld() const
