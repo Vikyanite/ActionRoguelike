@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SAICharacter.generated.h"
 
+class USActionComponent;
 class USWorldUserWidget;
 class UUserWidget;
 class USAttributeComponent;
@@ -30,6 +31,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UPawnSensingComponent* PawnSensingComp;
 
+	UPROPERTY(VisibleAnywhere, Category="Components")
+	USActionComponent* ActionComp;
+	
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	USAttributeComponent* AttributeComp;
 

@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "SProjectileBase.h"
 #include "GameFramework/Actor.h"
 #include "MagicProjectile.generated.h"
 
+struct FGameplayTag;
 class USphereComponent;
 class UProjectileMovementComponent;
 class UParticleSystemComponent;
@@ -31,6 +33,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Damage")
 	float DamageAmount;
+
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	FGameplayTag ParryTag;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

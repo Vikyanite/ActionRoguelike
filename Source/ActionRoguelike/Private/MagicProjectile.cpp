@@ -3,6 +3,7 @@
 
 #include "ActionRoguelike/Public/MagicProjectile.h"
 
+#include "SActionComponent.h"
 #include "SGameplayFunctionLibrary.h"
 #include "ActionRoguelike/Public/SAttributeComponent.h"
 #include "Components/AudioComponent.h"
@@ -31,12 +32,14 @@ void AMagicProjectile::OverlapHandler(UPrimitiveComponent* OverlappedComponent, 
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
-		// USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-		// if (AttributeComp)
-		// {
-		// 	AttributeComp->ApplyHealthChange(GetInstigator(), -DamageAmount);
-		// 	Explode();
-		// }
+		USActionComponent* ActionComp = OtherActor->FindComponentByClass<USActionComponent>();
+		if (ActionComp && ActionComp->ActiveGameplayTags.HasTag(ParryTag))
+		{
+			MoveComp->Velocity = -MoveComp->Velocity;
+			SetInstigator(Cast<APawn>(OtherActor));
+			return ;
+		}
+		
 		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
 		{
 			Explode();
