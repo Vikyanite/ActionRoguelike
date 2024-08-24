@@ -14,14 +14,11 @@ class ACTIONROGUELIKE_API ASPowerup_HealthPotion : public ASPowerupActor
 public:
 	// Sets default values for this actor's properties
 	ASPowerup_HealthPotion();
-
+	
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(EditAnywhere, Category="Credits")
+	int32 CreditCost;
+	
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 };

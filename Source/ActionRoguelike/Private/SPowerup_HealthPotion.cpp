@@ -5,6 +5,7 @@
 
 #include "SAttributeComponent.h"
 #include "SCharacter.h"
+#include "SPlayerState.h"
 
 
 // Sets default values
@@ -12,29 +13,37 @@ ASPowerup_HealthPotion::ASPowerup_HealthPotion()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-}
 
-// Called when the game starts or when spawned
-void ASPowerup_HealthPotion::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ASPowerup_HealthPotion::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	CreditCost = 50;
 }
 
 void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
+	if (!ensure(InstigatorPawn))
+	{
+		return;
+	}
+	
 	if (ASCharacter* Player = Cast<ASCharacter>(InstigatorPawn))
 	{
 		USAttributeComponent* AttrComp = Player->GetAttributeComponent();
-		if (AttrComp->ApplyHealthChange(this, AttrComp->HealthMax))
+		if (ensure(AttrComp) && !AttrComp->IsFullHealth())
 		{
-			HideAndCooldown();
+			if (ASPlayerState* PS = Player->GetPlayerState<ASPlayerState>())
+			{
+				if (PS->RemoveCredits(CreditCost) && AttrComp->ApplyHealthChange(this, AttrComp->HealthMax))
+				{
+					HideAndCooldown();
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Not enough credits or health is full"));
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("full health interation skipped"));
 		}
 	}
 }

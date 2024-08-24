@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	bool ApplyHealthChange(AActor* InstigatorActor, float Delta);
 
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	bool IsFullHealth();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attributes")
 	float HealthMax = 100.f;
 

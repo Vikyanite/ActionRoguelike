@@ -78,3 +78,8 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	return ActualDelta != 0.f;
 }
 
+bool USAttributeComponent::IsFullHealth()
+{
+	return Health == HealthMax;
+}
+

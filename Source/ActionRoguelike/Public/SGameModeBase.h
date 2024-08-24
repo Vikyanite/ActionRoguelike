@@ -7,6 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "SGameModeBase.generated.h"
 
+class ASPowerupActor;
 class UEnvQueryInstanceBlueprintWrapper;
 class UEnvQuery;
 /**
@@ -51,6 +52,23 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TSubclassOf<AActor> BotClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Credits")
+	int CreditsPerKill;
+	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category="PowerUp")
+	UEnvQuery* PowerupSpawnQuery;
+	
+	UPROPERTY(EditDefaultsOnly, Category="PowerUp")
+	TArray<TSubclassOf<ASPowerupActor>> PowerupClasses;
+	
+	UPROPERTY(EditDefaultsOnly, Category="PowerUp")
+	int DesiredPowerupCount;
 
+	UPROPERTY(EditDefaultsOnly, Category="PowerUp")
+	int RequiredDistance;
 
+	UFUNCTION()
+	void OnPowerupQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 };
