@@ -16,7 +16,7 @@ USActionComponent::USActionComponent()
 	// ...
 }
 
-void USActionComponent::AddAction(TSubclassOf<USAction> ActionClass)
+void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> ActionClass)
 {
 	if (!ensure(ActionClass))
 	{
@@ -28,6 +28,11 @@ void USActionComponent::AddAction(TSubclassOf<USAction> ActionClass)
 		return ;
 	}
 	Actions.Add(NewAction);
+
+	if (NewAction->bAutoStart && ensure(NewAction->CanStart(Instigator)))
+	{
+		NewAction->StartAction(Instigator);
+	}
 }
 
 
@@ -38,7 +43,7 @@ void USActionComponent::BeginPlay()
 
 	for (TSubclassOf<USAction> ActionClass : DefaultActions)
 	{
-		AddAction(ActionClass);
+		AddAction(GetOwner(), ActionClass);
 	}
 	
 }
@@ -76,6 +81,15 @@ bool USActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 		}
 	}
 	return false;
+}
+
+void USActionComponent::RemoveAction(USAction* Action)
+{
+	if (!ensure(Action && !Action->IsRunning()))
+	{
+		return ;
+	}
+	Actions.Remove(Action);
 }
 
 

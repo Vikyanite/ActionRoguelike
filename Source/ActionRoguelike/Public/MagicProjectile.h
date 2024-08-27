@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "SActionEffect.h"
 #include "SProjectileBase.h"
 #include "GameFramework/Actor.h"
 #include "MagicProjectile.generated.h"
@@ -36,6 +37,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Damage")
 	FGameplayTag ParryTag;
+
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	TSubclassOf<USActionEffect> BurningActionClass;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
