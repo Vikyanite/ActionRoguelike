@@ -28,6 +28,9 @@ protected:
 	
 	UPROPERTY()
 	AActor* FocusedActor;
+	
+	UFUNCTION(Server, Reliable)
+	void ServerInteract(AActor* InFocus);
 
 	UPROPERTY(EditDefaultsOnly, Category="UI")
 	TSubclassOf<USWorldUserWidget> DefaultWidgetClass;

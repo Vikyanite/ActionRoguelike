@@ -34,7 +34,11 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FindBestInteractable();
+	APawn* MyPawn = Cast<APawn>(GetOwner());
+	if (MyPawn->IsLocallyControlled())
+	{
+		FindBestInteractable();
+	}
 }
 
 void USInteractionComponent::FindBestInteractable()
@@ -65,7 +69,7 @@ void USInteractionComponent::FindBestInteractable()
 	{
 		if (CVarDebugDrawInteraction.GetValueOnGameThread())
 		{
-			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, TraceRadius, 32, LineColor, false, 2.f);
+			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, TraceRadius, 32, LineColor, false, 0.f);
 		}
 		
 		if (AActor* HitActor = Hit.GetActor())
@@ -79,7 +83,7 @@ void USInteractionComponent::FindBestInteractable()
 	}
 	if (CVarDebugDrawInteraction.GetValueOnGameThread())
 	{
-		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.f);
+		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 0.f);
 	}
 
 	if (FocusedActor)
@@ -109,12 +113,17 @@ void USInteractionComponent::FindBestInteractable()
 
 void USInteractionComponent::PrimaryInteract()
 {
-	if (FocusedActor == nullptr)
+	ServerInteract(FocusedActor);
+}
+
+void USInteractionComponent::ServerInteract_Implementation(AActor* InFocus)
+{
+	if (InFocus == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("FocusedActor is nullptr"));
 		return;
 	}
 	
 	APawn* MyPawn = Cast<APawn>(GetOwner());
-	ISGameplayInterface::Execute_Interact(FocusedActor, MyPawn);
+	ISGameplayInterface::Execute_Interact(InFocus, MyPawn);
 }
