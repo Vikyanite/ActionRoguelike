@@ -21,6 +21,8 @@ ASPowerupActor::ASPowerupActor()
 	RespawnTime = 10.f;
 	
 	bIsActive = true;
+
+	SetReplicates(true);
 }
 
 // Called when the game starts or when spawned
