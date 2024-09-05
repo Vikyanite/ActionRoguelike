@@ -39,9 +39,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	bool IsFullHealth();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attributes")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category="Attributes")
 	float HealthMax = 100.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float Health;
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastHealthChanged(AActor* InstigatorActor, float NewHealth, float Delta);
 };

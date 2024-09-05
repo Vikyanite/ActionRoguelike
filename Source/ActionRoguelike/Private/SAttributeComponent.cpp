@@ -4,6 +4,7 @@
 #include "ActionRoguelike/Public/SAttributeComponent.h"
 
 #include "SGameModeBase.h"
+#include "Net/UnrealNetwork.h"
 
 static TAutoConsoleVariable<float> CVarDamageMultiplier(
 	TEXT("su.DamageMultiplier"),
@@ -14,12 +15,10 @@ static TAutoConsoleVariable<float> CVarDamageMultiplier(
 // Sets default values for this component's properties
 USAttributeComponent::USAttributeComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	HealthMax = 100.f;
+	Health = HealthMax;
 
-	// ...
-	Health = 100.f;
+	SetIsReplicatedByDefault(true);
 }
 
 USAttributeComponent* USAttributeComponent::GetAttributeComp(const AActor* FromActor)
@@ -68,6 +67,8 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	float ActualDelta = Health-PreHealth;
 	OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
 
+	MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
+
 	if (ActualDelta < 0.f && Health == 0.f)
 	{
 		if (ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>())
@@ -81,5 +82,19 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 bool USAttributeComponent::IsFullHealth()
 {
 	return Health == HealthMax;
+}
+
+void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewHealth, float Delta)
+{
+	OnHealthChanged.Broadcast(InstigatorActor, this, NewHealth, Delta);
+}
+
+void USAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(USAttributeComponent, Health);
+	DOREPLIFETIME(USAttributeComponent, HealthMax);
+	// DOREPLIFETIME_CONDITION(USAttributeComponent, HealthMax, COND_InitialOnly);
 }
 
