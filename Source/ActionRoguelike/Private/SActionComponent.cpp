@@ -9,11 +9,19 @@
 // Sets default values for this component's properties
 USActionComponent::USActionComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	SetIsReplicatedByDefault(true);
+}
+
+// Called every frame
+void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+									  FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	FString DebugMsg = GetNameSafe(GetOwner()) + " : " + ActiveGameplayTags.ToStringSimple();
+	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::White, DebugMsg);
 }
 
 void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> ActionClass)
@@ -60,6 +68,12 @@ bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FailedMsg);
 				continue;
 			}
+
+			if (!GetOwner()->HasAuthority())
+			{
+				ServerStartAction(Instigator, ActionName);
+			}
+			
 			Action->StartAction(Instigator);
 			return true;
 		}
@@ -92,14 +106,7 @@ void USActionComponent::RemoveAction(USAction* Action)
 	Actions.Remove(Action);
 }
 
-
-// Called every frame
-void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                      FActorComponentTickFunction* ThisTickFunction)
+void USActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	FString DebugMsg = GetNameSafe(GetOwner()) + " : " + ActiveGameplayTags.ToStringSimple();
-	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::White, DebugMsg);
+	StartActionByName(Instigator, ActionName);
 }
-

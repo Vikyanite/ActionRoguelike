@@ -16,6 +16,7 @@ class ACTIONROGUELIKE_API USActionComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
+	
 	// Sets default values for this component's properties
 	USActionComponent();
 
@@ -35,6 +36,10 @@ public:
 	void RemoveAction(USAction* Action);
 	
 protected:
+	
+	UFUNCTION(Server, Reliable)
+	void ServerStartAction(AActor* Instigator, FName ActionName);
+	
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
@@ -44,7 +49,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Actions")
 	TArray<TSubclassOf<USAction>> DefaultActions;
 
-
+	
 	
 public:
 	// Called every frame
