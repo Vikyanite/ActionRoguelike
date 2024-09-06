@@ -55,21 +55,6 @@ void ASProjectileBase::Explode_Implementation()
 	}
 }
 
-
-// Called when the game starts or when spawned
-void ASProjectileBase::BeginPlay()
-{
-	Super::BeginPlay();
-	AudioComp->Play();
-}
-
-// Called every frame
-void ASProjectileBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void ASProjectileBase::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();

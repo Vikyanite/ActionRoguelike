@@ -7,6 +7,7 @@
 #include "SAttributeComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatorActor, USAttributeComponent*, OwningComp, float, NewHealth, float, Delta);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnRageChanged, AActor*, InstigatorActor, USAttributeComponent*, OwningComp, float, NewRage, float, Delta);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API USAttributeComponent : public UActorComponent
@@ -30,21 +31,40 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool Kill(AActor* InstigatorActor);
 	
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(BlueprintAssignable, Category="Attributes")
 	FOnHealthChanged OnHealthChanged;
-
-	UFUNCTION(BlueprintCallable, Category="Attributes")
-	bool ApplyHealthChange(AActor* InstigatorActor, float Delta);
-
-	UFUNCTION(BlueprintCallable, Category="Attributes")
-	bool IsFullHealth();
-
+	
+	UPROPERTY(BlueprintAssignable, Category="Attributes")
+	FOnRageChanged OnRageChanged;
+	
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category="Attributes")
 	float HealthMax = 100.f;
 
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float Health;
+	
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category="Attributes")
+	float RageMax = 100.f;
+
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float Rage;
+
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	bool IsFullHealth();
+
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	bool ApplyHealthChange(AActor* InstigatorActor, float Delta);
+
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	bool ApplyRageChange(AActor* InstigatorActor, float Delta);
 
 	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastHealthChanged(AActor* InstigatorActor, float NewHealth, float Delta);
+
+	UFUNCTION(BlueprintCallable)
+	float GetHealth() const { return Health; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetRage() const { return Rage; }
+	
 };

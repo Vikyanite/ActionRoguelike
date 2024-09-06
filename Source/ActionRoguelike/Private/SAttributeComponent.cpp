@@ -18,6 +18,9 @@ USAttributeComponent::USAttributeComponent()
 	HealthMax = 100.f;
 	Health = HealthMax;
 
+	RageMax = 100.f;
+	Rage = 0.f;
+
 	SetIsReplicatedByDefault(true);
 }
 
@@ -65,10 +68,12 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	Health = FMath::Clamp(Health+Delta, 0.f, HealthMax);
 
 	float ActualDelta = Health-PreHealth;
-	OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
-
-	MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
-
+	// OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
+	if (ActualDelta != 0.f)
+	{
+		MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
+	}
+	
 	if (ActualDelta < 0.f && Health == 0.f)
 	{
 		if (ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>())
@@ -76,6 +81,20 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 			GM->OnActorKilled(GetOwner(), InstigatorActor);
 		}
 	}
+	return ActualDelta != 0.f;
+}
+
+bool USAttributeComponent::ApplyRageChange(AActor* InstigatorActor, float Delta)
+{
+	float PreRage = Rage;
+	Rage = FMath::Clamp(Rage+Delta, 0.f, RageMax);
+
+	float ActualDelta = Rage-PreRage;
+	if (ActualDelta != 0.f)
+	{
+		OnRageChanged.Broadcast(InstigatorActor, this, Rage, ActualDelta);
+	}
+	
 	return ActualDelta != 0.f;
 }
 
@@ -95,6 +114,9 @@ void USAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 	DOREPLIFETIME(USAttributeComponent, Health);
 	DOREPLIFETIME(USAttributeComponent, HealthMax);
+
+	DOREPLIFETIME(USAttributeComponent, Rage);
+	DOREPLIFETIME(USAttributeComponent, RageMax);
 	// DOREPLIFETIME_CONDITION(USAttributeComponent, HealthMax, COND_InitialOnly);
 }
 

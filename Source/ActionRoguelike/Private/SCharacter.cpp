@@ -102,14 +102,18 @@ void ASCharacter::StopSprint()
 
 void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
+	if (Delta < .0f)
+	{
+		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
+
+		float RageDelta = FMath::Abs(Delta);
+		AttributeComp->ApplyRageChange(InstigatorActor, RageDelta);
+	}
+
 	if (NewHealth == 0.f)
 	{
 		APlayerController* PC = CastChecked<APlayerController>(GetController());
 		DisableInput(PC);
-	}
-	if (Delta < .0f)
-	{
-		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
 	}
 }
 

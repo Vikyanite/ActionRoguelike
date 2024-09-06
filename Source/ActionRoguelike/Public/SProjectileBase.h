@@ -17,8 +17,7 @@ UCLASS(ABSTRACT)
 class ACTIONROGUELIKE_API ASProjectileBase : public AActor
 {
 	GENERATED_BODY()
-
-
+	
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Effects")
@@ -44,6 +43,7 @@ protected:
 
 // effects
 protected:
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	UAudioComponent* AudioComp;
 
@@ -58,16 +58,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Effects|Shake")
 	float ImpactShakeOuterRadius;
 	
-public:	
+public:
+	
 	// Sets default values for this actor's properties
 	ASProjectileBase();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 };

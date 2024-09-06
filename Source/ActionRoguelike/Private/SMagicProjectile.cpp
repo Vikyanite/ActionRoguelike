@@ -52,10 +52,3 @@ void AMagicProjectile::OverlapHandler(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
-// Called every frame
-void AMagicProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

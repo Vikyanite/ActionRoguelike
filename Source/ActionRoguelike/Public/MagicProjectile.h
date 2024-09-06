@@ -41,8 +41,4 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Damage")
 	TSubclassOf<USActionEffect> BurningActionClass;
 	
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 };
