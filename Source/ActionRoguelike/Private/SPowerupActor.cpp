@@ -22,7 +22,7 @@ ASPowerupActor::ASPowerupActor()
 	
 	bIsActive = true;
 
-	SetReplicates(true);
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
