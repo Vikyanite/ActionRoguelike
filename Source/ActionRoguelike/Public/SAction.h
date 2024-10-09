@@ -9,6 +9,20 @@
 
 class USActionComponent;
 struct FGameplayTagContainer;
+
+USTRUCT()
+struct FActionRepData
+{
+	GENERATED_BODY()
+	
+public:
+	UPROPERTY()
+	bool bIsRunning;
+
+	UPROPERTY()
+	AActor* Instigator;
+};
+
 /**
  * 
  */
@@ -30,8 +44,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Tags")
 	FGameplayTagContainer GrantsTags;
 
-	UPROPERTY(ReplicatedUsing="OnRep_IsRunning")
-	bool bIsRunning = false;
+	UPROPERTY(ReplicatedUsing="OnRep_RepData")
+	FActionRepData RepData;
+
+	UFUNCTION()
+	void OnRep_RepData();
 	
 public:
 	void Initialize(USActionComponent* InActionComp);
@@ -49,12 +66,9 @@ public:
 	bool CanStart(AActor* Instigator);
 
 	UWorld* GetWorld() const override;
-
-	UFUNCTION()
-	void OnRep_IsRunning();
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Action")
-	bool IsRunning() const { return bIsRunning; }
+	bool IsRunning() const { return RepData.bIsRunning; }
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool bAutoStart;
