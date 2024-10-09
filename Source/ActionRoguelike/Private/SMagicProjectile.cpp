@@ -44,7 +44,7 @@ void AMagicProjectile::OverlapHandler(UPrimitiveComponent* OverlappedComponent, 
 		{
 			Explode();
 
-			if (ActionComp && BurningActionClass)
+			if (ActionComp && BurningActionClass && HasAuthority())
 			{
 				ActionComp->AddAction(OtherActor, BurningActionClass);
 			}
