@@ -3,6 +3,8 @@
 
 #include "SPlayerState.h"
 
+#include "SSaveGame.h"
+
 void ASPlayerState::AddCredits(int32 Delta)
 {
 	if (!ensure(Delta>0))
@@ -27,4 +29,20 @@ bool ASPlayerState::RemoveCredits(int32 delta)
 	OnCreditsChanged.Broadcast(this, Credits, delta);
 
 	return true;
+}
+
+void ASPlayerState::SavePlayerState_Implementation(USSaveGame* SaveGame)
+{
+	if (SaveGame)
+	{
+		SaveGame->Credits = Credits;
+	}
+}
+
+void ASPlayerState::LoadPlayerState_Implementation(USSaveGame* SaveGame)
+{
+	if (SaveGame)
+	{
+		Credits = SaveGame->Credits;
+	}
 }

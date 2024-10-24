@@ -16,7 +16,6 @@ class ACTIONROGUELIKE_API USSaveGame : public USaveGame
 
 public:
 	UPROPERTY()
-	int32 Credit;
-
+	int32 Credits;
 	
 };

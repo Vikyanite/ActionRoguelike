@@ -12,6 +12,7 @@
 #include "SSaveGame.h"
 #include "AI/SAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
+#include "GameFramework/GameStateBase.h"
 #include "Kismet/GameplayStatics.h"
 
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), false, TEXT("Enable Bot Spawning"), ECVF_Cheat);
@@ -210,6 +211,14 @@ void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
 
 void ASGameModeBase::WriteSaveGame()
 {
+	for (int i = 0; i < GameState->PlayerArray.Num(); i++)
+	{
+		ASPlayerState* PS = Cast<ASPlayerState>(GameState->PlayerArray[i]);
+		if (PS)
+		{
+			PS->SavePlayerState(CurrentSaveGame);
+		}
+	}
 	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
 }
 
@@ -230,5 +239,15 @@ void ASGameModeBase::LoadSaveGame()
 		CurrentSaveGame = Cast<USSaveGame>(UGameplayStatics::CreateSaveGameObject(USSaveGame::StaticClass()));
 
 		UE_LOG(LogTemp, Log, TEXT("Created New Save Game"));
+	}
+}
+
+void ASGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+	
+	if (ASPlayerState* PS = NewPlayer->GetPlayerState<ASPlayerState>())
+	{
+		PS->LoadPlayerState(CurrentSaveGame);
 	}
 }
