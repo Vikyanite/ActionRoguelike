@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameFramework/SaveGame.h"
 #include "SGameModeBase.generated.h"
 
+class USSaveGame;
 class ASPowerupActor;
 class UEnvQueryInstanceBlueprintWrapper;
 class UEnvQuery;
@@ -19,6 +21,8 @@ class ACTIONROGUELIKE_API ASGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	
 	virtual void StartPlay() override;
 
 	ASGameModeBase();
@@ -30,6 +34,11 @@ public:
 	virtual void OnActorKilled(AActor* VictimActor, AActor* KillerActor);
 
 protected:
+	UPROPERTY()
+	USSaveGame* CurrentSaveGame;
+
+	FString SlotName;
+	
 	UFUNCTION()
 	void RespawnPlayerElapsed(AController* Controller);
 	
@@ -71,4 +80,10 @@ protected:
 
 	UFUNCTION()
 	void OnPowerupQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+
+public:
+	UFUNCTION(BlueprintCallable, Category="SaveGame")
+	void WriteSaveGame();
+
+	void LoadSaveGame();
 };

@@ -9,8 +9,10 @@
 #include "SCharacter.h"
 #include "SPlayerState.h"
 #include "SPowerupActor.h"
+#include "SSaveGame.h"
 #include "AI/SAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
+#include "Kismet/GameplayStatics.h"
 
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), false, TEXT("Enable Bot Spawning"), ECVF_Cheat);
 
@@ -23,7 +25,17 @@ ASGameModeBase::ASGameModeBase()
 	DesiredPowerupCount = 10;
 
 	PlayerStateClass = ASPlayerState::StaticClass();
+
+	SlotName = "SaveGame01";
 }
+
+void ASGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+	LoadSaveGame();
+}
+
 
 void ASGameModeBase::KillAll()
 {
@@ -196,3 +208,27 @@ void ASGameModeBase::RespawnPlayerElapsed(AController* Controller)
 	}
 }
 
+void ASGameModeBase::WriteSaveGame()
+{
+	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
+}
+
+void ASGameModeBase::LoadSaveGame()
+{
+	if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
+	{
+		CurrentSaveGame = Cast<USSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
+		if (CurrentSaveGame == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to Load Save Game"));
+			return ;
+		}
+		UE_LOG(LogTemp, Log, TEXT("Save Game Loaded"));
+	}
+	else
+	{
+		CurrentSaveGame = Cast<USSaveGame>(UGameplayStatics::CreateSaveGameObject(USSaveGame::StaticClass()));
+
+		UE_LOG(LogTemp, Log, TEXT("Created New Save Game"));
+	}
+}
