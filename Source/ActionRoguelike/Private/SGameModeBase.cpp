@@ -217,8 +217,27 @@ void ASGameModeBase::WriteSaveGame()
 		if (PS)
 		{
 			PS->SavePlayerState(CurrentSaveGame);
+			break;
 		}
 	}
+
+	CurrentSaveGame->SavedActors.Empty();
+
+	for (FActorIterator It(GetWorld()); It; ++It)
+	{
+		AActor* Actor = *It;
+		if (!Actor->Implements<USGameplayInterface>())
+		{
+			continue;
+		}
+
+		FActorSaveData ActorData;
+		ActorData.ActorName = Actor->GetName();
+		ActorData.Transform = Actor->GetActorTransform();
+
+		CurrentSaveGame->SavedActors.Add(ActorData);
+	}
+	
 	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
 }
 
@@ -233,6 +252,24 @@ void ASGameModeBase::LoadSaveGame()
 			return ;
 		}
 		UE_LOG(LogTemp, Log, TEXT("Save Game Loaded"));
+
+		for (FActorIterator It(GetWorld()); It; ++It)
+		{
+			AActor* Actor = *It;
+			if (!Actor->Implements<USGameplayInterface>())
+			{
+				continue;
+			}
+
+			for (const FActorSaveData& ActorData : CurrentSaveGame->SavedActors)
+			{
+				if (ActorData.ActorName == Actor->GetName())
+				{
+					Actor->SetActorTransform(ActorData.Transform);
+					break;
+				}
+			}
+		}
 	}
 	else
 	{
