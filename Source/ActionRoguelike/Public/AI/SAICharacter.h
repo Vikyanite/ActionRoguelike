@@ -66,5 +66,7 @@ protected:
 	TSubclassOf<UUserWidget> SpottedWidgetClass;
 	
 	USWorldUserWidget* ActiveHealthBar;
-	
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastPawnSeen();
 };

@@ -106,6 +106,11 @@ bool USAttributeComponent::ApplyRageChange(AActor* InstigatorActor, float Delta)
 	return ActualDelta != 0.f;
 }
 
+void USAttributeComponent::MulticastRageChanged_Implementation(AActor* InstigatorActor, float NewRage, float Delta)
+{
+	
+}
+
 bool USAttributeComponent::IsFullHealth()
 {
 	return Health == HealthMax;

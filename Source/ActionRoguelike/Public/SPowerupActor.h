@@ -13,15 +13,8 @@ UCLASS()
 class ACTIONROGUELIKE_API ASPowerupActor : public AActor, public ISGameplayInterface
 {
 	GENERATED_BODY()
-
-public:
-	// Sets default values for this actor's properties
-	ASPowerupActor();
-
+	
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RespawnTime;
 
@@ -31,8 +24,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* MeshComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing="OnRep_IsActive")
 	bool bIsActive;
+
+	UFUNCTION()
+	void OnRep_IsActive();
 
 	FTimerHandle TimerHandle_RespawnTimer;
 	
@@ -45,8 +41,10 @@ protected:
 	void SetPowerupState(bool bNewIsActive);
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
+
+public:
+	// Sets default values for this actor's properties
+	ASPowerupActor();
+
 };

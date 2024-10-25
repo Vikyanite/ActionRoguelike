@@ -300,10 +300,10 @@ void ASGameModeBase::LoadSaveGame()
 
 void ASGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
 {
-	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
-	
 	if (ASPlayerState* PS = NewPlayer->GetPlayerState<ASPlayerState>())
 	{
 		PS->LoadPlayerState(CurrentSaveGame);
 	}
+
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 }

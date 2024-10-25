@@ -16,9 +16,13 @@ UCLASS()
 class ACTIONROGUELIKE_API ASPlayerState : public APlayerState
 {
 	GENERATED_BODY()
+	
 protected:
-	UPROPERTY(EditDefaultsOnly, Category="Credits")
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing="OnRep_Credits", Category="Credits")
 	int32 Credits=0;
+	
+	UFUNCTION()
+	void OnRep_Credits(int32 OldCredits);
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Credits")

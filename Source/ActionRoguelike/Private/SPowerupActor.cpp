@@ -4,6 +4,7 @@
 #include "SPowerupActor.h"
 
 #include "Components/SphereComponent.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -25,10 +26,8 @@ ASPowerupActor::ASPowerupActor()
 	bReplicates = true;
 }
 
-// Called when the game starts or when spawned
-void ASPowerupActor::BeginPlay()
+void ASPowerupActor::Interact_Implementation(APawn* InstigatorPawn)
 {
-	Super::BeginPlay();
 	
 }
 
@@ -45,21 +44,21 @@ void ASPowerupActor::HideAndCooldown()
 
 void ASPowerupActor::SetPowerupState(bool bNewIsActive)
 {
-	SetActorEnableCollision(bNewIsActive);
-
-	// Set visibility on root and all children
-	RootComponent->SetVisibility(bNewIsActive, true);
+	bIsActive = bNewIsActive;
+	OnRep_IsActive();
 }
 
-// Called every frame
-void ASPowerupActor::Tick(float DeltaTime)
+void ASPowerupActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::Tick(DeltaTime);
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASPowerupActor, bIsActive);
 }
 
-void ASPowerupActor::Interact_Implementation(APawn* InstigatorPawn)
+void ASPowerupActor::OnRep_IsActive()
 {
-	
+	SetActorEnableCollision(bIsActive);
+	RootComponent->SetVisibility(bIsActive, true);
 }
 
 
