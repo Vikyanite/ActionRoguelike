@@ -14,7 +14,10 @@ USTRUCT()
 struct FActionRepData
 {
 	GENERATED_BODY()
-	
+	FActionRepData(): bIsRunning(false), Instigator(nullptr)
+	{
+	}
+
 public:
 	UPROPERTY()
 	bool bIsRunning;
