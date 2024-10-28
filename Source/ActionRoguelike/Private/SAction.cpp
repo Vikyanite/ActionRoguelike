@@ -16,6 +16,8 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 
 	RepData.bIsRunning = true;
 	RepData.Instigator = Instigator;
+
+	GetOwningComponent()->OnActionStarted.Broadcast(GetOwningComponent(), this);
 }
 
 void USAction::Initialize(USActionComponent* InActionComp)
@@ -31,6 +33,8 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 	UE_LOG(LogTemp, Warning, TEXT("[%s]: %s stopped"), Comp->GetOwner()->HasAuthority() ? TEXT("Server"):TEXT("Client"), *ActionName.ToString());
 	RepData.bIsRunning = false;
 	RepData.Instigator = Instigator;
+
+	GetOwningComponent()->OnActionStopped.Broadcast(GetOwningComponent(), this);
 }
 
 USActionComponent* USAction::GetOwningComponent()
