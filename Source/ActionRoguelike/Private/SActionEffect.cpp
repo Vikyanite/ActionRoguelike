@@ -5,6 +5,12 @@
 
 #include "SActionComponent.h"
 
+float USActionEffect::GetTimeRemaining() const
+{
+	float EndTime = TimeStarted + Duration;
+	return EndTime - GetWorld()->TimeSeconds;
+}
+
 USActionEffect::USActionEffect()
 {
 }

@@ -83,4 +83,6 @@ public:
 	{
 		return true;
 	}
+	
+	float TimeStarted;
 };
