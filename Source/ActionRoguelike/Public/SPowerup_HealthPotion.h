@@ -21,4 +21,6 @@ protected:
 	int32 CreditCost;
 	
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
+
+	virtual FText GetInteractText_Implementation(APawn* InstigatorPawn) override;
 };
