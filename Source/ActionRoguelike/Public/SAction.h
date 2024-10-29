@@ -83,6 +83,7 @@ public:
 	{
 		return true;
 	}
-	
+
+	UPROPERTY(Replicated)
 	float TimeStarted;
 };
