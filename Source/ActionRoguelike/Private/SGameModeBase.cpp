@@ -7,6 +7,7 @@
 #include "SAdvancedTransformInputBox.h"
 #include "SAttributeComponent.h"
 #include "SCharacter.h"
+#include "SMonsterData.h"
 #include "SPlayerState.h"
 #include "SPowerupActor.h"
 #include "SSaveGame.h"
@@ -122,7 +123,17 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 	TArray<FVector> SpawnLocations = QueryInstance->GetResultsAsLocations();
 	if (SpawnLocations.Num() > 0)
 	{
-		GetWorld()->SpawnActor<AActor>(BotClass, SpawnLocations[0], FRotator::ZeroRotator);
+		if (MonsterTable)
+		{
+			TArray<FMonsterInfoRow*> Rows;
+			MonsterTable->GetAllRows("", Rows);
+
+			int32 RandomIndex = FMath::RandRange(0, Rows.Num() - 1);
+			FMonsterInfoRow* SeletedRow = Rows[RandomIndex];
+
+			GetWorld()->SpawnActor<AActor>(SeletedRow->MonsterData->MonsterClass, SpawnLocations[0], FRotator::ZeroRotator);
+		}
+		
 	}
 }
 

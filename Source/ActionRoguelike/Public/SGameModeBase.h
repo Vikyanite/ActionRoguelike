@@ -3,15 +3,40 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/SaveGame.h"
 #include "SGameModeBase.generated.h"
 
+class USMonsterData;
 class USSaveGame;
 class ASPowerupActor;
 class UEnvQueryInstanceBlueprintWrapper;
 class UEnvQuery;
+
+USTRUCT(BlueprintType)
+struct FMonsterInfoRow:public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	FMonsterInfoRow(): Weight(1.f), SpawnCost(5.f), KillReward(20.f)
+	{
+	}
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USMonsterData* MonsterData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float Weight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float SpawnCost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float KillReward;
+};
+
 /**
  * 
  */
@@ -60,7 +85,7 @@ protected:
 	UCurveFloat* DifficultyCurve;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	TSubclassOf<AActor> BotClass;
+	UDataTable* MonsterTable;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Credits")
 	int CreditsPerKill;

@@ -8,7 +8,7 @@
 
 void ASPlayerState::AddCredits(int32 Delta)
 {
-	if (!ensure(Delta>0))
+	if (Delta<=0)
 	{
 		return ;
 	}
