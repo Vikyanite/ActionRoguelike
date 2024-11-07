@@ -4,6 +4,7 @@
 #include "SGameModeBase.h"
 
 #include "EngineUtils.h"
+#include "SActionComponent.h"
 #include "SAdvancedTransformInputBox.h"
 #include "SAttributeComponent.h"
 #include "SCharacter.h"
@@ -11,6 +12,7 @@
 #include "SPlayerState.h"
 #include "SPowerupActor.h"
 #include "SSaveGame.h"
+#include "ActionRoguelike/ActionRoguelike.h"
 #include "AI/SAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "GameFramework/GameStateBase.h"
@@ -131,7 +133,20 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 			int32 RandomIndex = FMath::RandRange(0, Rows.Num() - 1);
 			FMonsterInfoRow* SeletedRow = Rows[RandomIndex];
 
-			GetWorld()->SpawnActor<AActor>(SeletedRow->MonsterData->MonsterClass, SpawnLocations[0], FRotator::ZeroRotator);
+			AActor* NewBot = GetWorld()->SpawnActor<AActor>(SeletedRow->MonsterData->MonsterClass, SpawnLocations[0], FRotator::ZeroRotator);
+			if (NewBot)
+			{
+				LogOnScreen(this, FString::Printf(TEXT("Spawned enemy: %s (%s)"), *GetNameSafe(NewBot), *GetNameSafe(SeletedRow->MonsterData)));
+
+				USActionComponent* ActionComp = NewBot->FindComponentByClass<USActionComponent>();
+				if (ActionComp)
+				{
+					for (TSubclassOf<USAction> ActionClass : SeletedRow->MonsterData->Actions)
+					{
+						ActionComp->AddAction(NewBot, ActionClass);
+					}
+				}
+			}
 		}
 		
 	}
