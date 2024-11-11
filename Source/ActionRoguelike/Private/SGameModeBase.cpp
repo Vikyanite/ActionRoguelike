@@ -14,6 +14,7 @@
 #include "SSaveGame.h"
 #include "ActionRoguelike/ActionRoguelike.h"
 #include "AI/SAICharacter.h"
+#include "Engine/AssetManager.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "GameFramework/GameStateBase.h"
 #include "Kismet/GameplayStatics.h"
@@ -133,27 +134,48 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 			int32 RandomIndex = FMath::RandRange(0, Rows.Num() - 1);
 			FMonsterInfoRow* SeletedRow = Rows[RandomIndex];
 
-			AActor* NewBot = GetWorld()->SpawnActor<AActor>(SeletedRow->MonsterData->MonsterClass, SpawnLocations[0], FRotator::ZeroRotator);
-			if (NewBot)
+			UAssetManager* Manager = UAssetManager::GetIfValid();
+			if (Manager)
 			{
-				LogOnScreen(this, FString::Printf(TEXT("Spawned enemy: %s (%s)"), *GetNameSafe(NewBot), *GetNameSafe(SeletedRow->MonsterData)));
-
-				USActionComponent* ActionComp = NewBot->FindComponentByClass<USActionComponent>();
-				if (ActionComp)
-				{
-					for (TSubclassOf<USAction> ActionClass : SeletedRow->MonsterData->Actions)
-					{
-						ActionComp->AddAction(NewBot, ActionClass);
-					}
-				}
+				LogOnScreen(this, "Loading monster...", FColor::Green);
+				TArray<FName> Bundles;
+				FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &ASGameModeBase::OnMonsterLoaded, SeletedRow->MonsterId, SpawnLocations[0]);
+				Manager->LoadPrimaryAsset(SeletedRow->MonsterId, Bundles, Delegate);
 			}
 		}
 		
 	}
 }
 
+void ASGameModeBase::OnMonsterLoaded(FPrimaryAssetId PrimaryAssetId, FVector SpawnLoc)
+{
+	UAssetManager* Manager = UAssetManager::GetIfValid();
+	if (Manager)
+	{
+		USMonsterData* MonsterData = Cast<USMonsterData>(Manager->GetPrimaryAssetObject(PrimaryAssetId));
+		if (MonsterData)
+		{
+			AActor* NewBot = GetWorld()->SpawnActor<AActor>(MonsterData->MonsterClass, SpawnLoc, FRotator::ZeroRotator);
+			if (NewBot)
+			{
+				LogOnScreen(this, FString::Printf(TEXT("Spawned enemy: %s (%s)"), *GetNameSafe(NewBot), *GetNameSafe(MonsterData)));
+	
+				USActionComponent* ActionComp = NewBot->FindComponentByClass<USActionComponent>();
+				if (ActionComp)
+				{
+					for (TSubclassOf<USAction> ActionClass : MonsterData->Actions)
+					{
+						ActionComp->AddAction(NewBot, ActionClass);
+					}
+				}
+			}
+		}
+	}
+	
+}
+
 void ASGameModeBase::OnPowerupQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
-	EEnvQueryStatus::Type QueryStatus)
+                                             EEnvQueryStatus::Type QueryStatus)
 {
 	if (QueryStatus != EEnvQueryStatus::Success)
 	{

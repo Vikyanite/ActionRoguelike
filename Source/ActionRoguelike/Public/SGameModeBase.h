@@ -25,7 +25,7 @@ public:
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USMonsterData* MonsterData;
+	FPrimaryAssetId MonsterId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Weight;
@@ -80,6 +80,8 @@ protected:
 
 	UFUNCTION()
 	void OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+	
+	void OnMonsterLoaded(FPrimaryAssetId PrimaryAssetId, FVector SpawnLoc);
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UCurveFloat* DifficultyCurve;
