@@ -5,7 +5,6 @@
 
 #include "EngineUtils.h"
 #include "SActionComponent.h"
-#include "SAdvancedTransformInputBox.h"
 #include "SAttributeComponent.h"
 #include "SCharacter.h"
 #include "SMonsterData.h"

@@ -50,7 +50,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Effects|Audio")
 	USoundCue* ImpactSound;
 	
-
 	UPROPERTY(EditDefaultsOnly, Category = "Effects|Shake")
 	TSubclassOf<ULegacyCameraShake> ImpactShake;
 	UPROPERTY(EditDefaultsOnly, Category = "Effects|Shake")

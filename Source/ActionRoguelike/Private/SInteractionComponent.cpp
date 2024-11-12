@@ -3,11 +3,9 @@
 
 #include "ActionRoguelike/Public/SInteractionComponent.h"
 
-#include "InputBehavior.h"
 #include "SWorldUserWidget.h"
 #include "ActionRoguelike/Public/SGameplayInterface.h"
 #include "Blueprint/UserWidget.h"
-#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 
 static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(
 	TEXT("su.DebugDraw"),
