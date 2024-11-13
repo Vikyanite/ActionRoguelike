@@ -12,7 +12,7 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 	USActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.AppendTags(GrantsTags);
 
-	UE_LOG(LogTemp, Warning, TEXT("[%s]: %s started"), Comp->GetOwner()->HasAuthority() ? TEXT("Server"):TEXT("Client"), *ActionName.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("[%s]: %s started"), Comp->GetOwner()->HasAuthority() ? TEXT("Server"):TEXT("Client"), *ActionName.ToString());
 
 	RepData.bIsRunning = true;
 	RepData.Instigator = Instigator;
@@ -35,7 +35,7 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 	USActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.RemoveTags(GrantsTags);
 
-	UE_LOG(LogTemp, Warning, TEXT("[%s]: %s stopped"), Comp->GetOwner()->HasAuthority() ? TEXT("Server"):TEXT("Client"), *ActionName.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("[%s]: %s stopped"), Comp->GetOwner()->HasAuthority() ? TEXT("Server"):TEXT("Client"), *ActionName.ToString());
 	RepData.bIsRunning = false;
 	RepData.Instigator = Instigator;
 
