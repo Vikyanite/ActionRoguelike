@@ -28,7 +28,7 @@ ASAICharacter::ASAICharacter()
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
+	// GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
 	GetMesh()->SetGenerateOverlapEvents(true);
 
 	TimeToHitParamName = "TimeToHit";
@@ -128,12 +128,15 @@ AActor* ASAICharacter::GetTargetActor() const
 
 void ASAICharacter::MulticastPawnSeen_Implementation()
 {
-	USWorldUserWidget* NewWidget = CreateWidget<USWorldUserWidget>(GetWorld(), SpottedWidgetClass);
-	if (NewWidget)
+	if (SpottedWidgetClass)
 	{
-		NewWidget->AttachedActor = this;
-		// Index of 10 (or anything higher than default of 0) places this on top of any other widget.
-		// May end up behind the minion health bar otherwise.
-		NewWidget->AddToViewport(10);
+		USWorldUserWidget* NewWidget = CreateWidget<USWorldUserWidget>(GetWorld(), SpottedWidgetClass);
+		if (NewWidget)
+		{
+			NewWidget->AttachedActor = this;
+			// Index of 10 (or anything higher than default of 0) places this on top of any other widget.
+			// May end up behind the minion health bar otherwise.
+			NewWidget->AddToViewport(10);
+		}
 	}
 }
